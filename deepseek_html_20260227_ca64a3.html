@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commands Sharing Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0b0e14;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        header {
+            background: #141a24;
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid #2a2f3f;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00d4ff, #00ffaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo p { color: #a0a0a0; font-size: 0.9rem; }
+        .stats-mini {
+            display: flex;
+            gap: 2rem;
+            background: #1e2632;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+        }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.8rem; font-weight: bold; color: #00ffaa; }
+        .stat-label { color: #a0a0a0; font-size: 0.9rem; }
+        .search-section {
+            margin: 2rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .search-bar {
+            flex: 2;
+            min-width: 250px;
+            display: flex;
+            background: #1e2632;
+            border-radius: 50px;
+            padding: 0.3rem;
+        }
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        .search-bar button {
+            background: #00d4ff;
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            color: #0b0e14;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .ai-search {
+            background: #2a2f3f;
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        .filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 5%;
+        }
+        .filter-tab {
+            background: #1e2632;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-tab.active {
+            background: #00d4ff;
+            color: #0b0e14;
+            font-weight: bold;
+        }
+        .id-search {
+            margin: 1rem 5%;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .id-search input {
+            background: #1e2632;
+            border: 1px solid #2a2f3f;
+            padding: 0.7rem 1rem;
+            border-radius: 5px;
+            color: white;
+            width: 200px;
+        }
+        .id-search button {
+            background: #2a2f3f;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        .stats-panel {
+            margin: 2rem 5%;
+            background: #141a24;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            border: 1px solid #2a2f3f;
+        }
+        .stat-block {
+            text-align: center;
+        }
+        .stat-block h3 {
+            color: #00d4ff;
+            font-size: 2rem;
+        }
+        .stat-block p { color: #a0a0a0; }
+        .commands-section {
+            margin: 2rem 5%;
+        }
+        .commands-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .commands-header h2 { color: #00ffaa; }
+        .category-mini {
+            display: flex;
+            gap: 1rem;
+        }
+        .category-mini span {
+            background: #1e2632;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background: #141a24;
+            border: 1px solid #2a2f3f;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: 0.2s;
+        }
+        .card:hover { border-color: #00d4ff; }
+        .card h3 { color: #00d4ff; }
+        .rating {
+            color: #ffc107;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        .description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.8rem 0;
+        }
+        .tag {
+            background: #1e2632;
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #a0a0a0;
+        }
+        .card-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .btn {
+            background: #2a2f3f;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: #00d4ff;
+            color: #0b0e14;
+            font-weight: bold;
+        }
+        .btn-primary:hover { background: #00b8e6; }
+        .btn:hover { background: #3a4055; }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            overflow: auto;
+        }
+        .modal-content {
+            background: #141a24;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            border: 1px solid #2a2f3f;
+        }
+        .close {
+            color: #a0a0a0;
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        .close:hover { color: white; }
+        pre {
+            background: #1e2632;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 300px;
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; color: #00d4ff; margin-bottom: 0.3rem; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.7rem;
+            background: #1e2632;
+            border: 1px solid #2a2f3f;
+            border-radius: 5px;
+            color: white;
+        }
+        .flex { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .upload-btn {
+            background: #00ffaa;
+            color: #0b0e14;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #141a24;
+            margin-top: 3rem;
+            border-top: 1px solid #2a2f3f;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <h1>Commands Sharing Platform</h1>
+                <p>Discover, share, and explore amazing bot commands</p>
+            </div>
+            <div class="stats-mini">
+                <div class="stat-item">
+                    <div class="stat-value" id="miniCommands">158</div>
+                    <div class="stat-label">COMMANDS</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="miniLikes">110</div>
+                    <div class="stat-label">LIKES</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="miniUsers">0</div>
+                    <div class="stat-label">USERS</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="search-section">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for amazing commands...">
+            <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <button class="ai-search" id="aiSearchBtn"><i class="fas fa-brain"></i> AI-Powered Search</button>
+    </div>
+
+    <div class="filter-tabs" id="filterTabs">
+        <span class="filter-tab active" data-filter="all">All Commands</span>
+        <span class="filter-tab" data-filter="GoatBot">GoatBot</span>
+        <span class="filter-tab" data-filter="MiraiBot">MiraiBot</span>
+        <span class="filter-tab" data-filter="AutoBot">AutoBot</span>
+        <span class="filter-tab" data-filter="trending">Trending</span>
+        <span class="filter-tab" data-filter="recent">Recent</span>
+    </div>
+
+    <div class="id-search">
+        <input type="text" id="commandIdInput" placeholder="Enter command ID (1, 2, 3...)">
+        <button id="goToIdBtn"><i class="fas fa-arrow-right"></i> Go</button>
+        <button class="upload-btn" id="uploadBtn"><i class="fas fa-upload"></i> Upload Command</button>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stat-block">
+            <h3 id="totalCommands">158</h3>
+            <p>TOTAL COMMANDS</p>
+        </div>
+        <div class="stat-block">
+            <h3 id="totalLikes">110</h3>
+            <p>TOTAL LIKES</p>
+        </div>
+        <div class="stat-block">
+            <h3 id="activeUsers">0</h3>
+            <p>ACTIVE USERS</p>
+        </div>
+        <div class="stat-block">
+            <h3 id="totalShares">0</h3>
+            <p>TOTAL SHARES</p>
+        </div>
+    </div>
+
+    <div class="commands-section">
+        <div class="commands-header">
+            <h2>All Commands</h2>
+            <div class="category-mini">
+                <span data-category="all">All Commands</span>
+                <span data-category="GoatBot">GoatBot</span>
+                <span data-category="MiraiBot">MiraiBot</span>
+                <span data-category="AutoBot">AutoBot</span>
+            </div>
+        </div>
+        <div class="command-grid" id="commandGrid">
+            <!-- Les cartes seront chargées dynamiquement -->
+        </div>
+    </div>
+
+    <!-- Modale de détails -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="detailName"></h2>
+            <div class="rating" id="detailRating">⭐ ⭐ ⭐ ⭐ ⭐ (0.0)</div>
+            <p><strong>Auteur :</strong> <span id="detailAuthor"></span></p>
+            <p><strong>Description :</strong> <span id="detailDesc"></span></p>
+            <p><strong>Catégorie :</strong> <span id="detailCategory"></span> | <strong>Difficulté :</strong> <span id="detailDifficulty"></span></p>
+            <p><strong>Tags :</strong> <span id="detailTags"></span></p>
+            <div class="flex">
+                <span><i class="fas fa-eye"></i> <span id="detailViews">0</span></span>
+                <span><i class="fas fa-heart" style="color: #ff6b6b;"></i> <span id="detailLikes">0</span></span>
+                <span><i class="fas fa-share"></i> <span id="detailShares">0</span></span>
+            </div>
+            <h3>Code brut :</h3>
+            <pre id="detailCode"></pre>
+            <div class="flex">
+                <button class="btn btn-primary" id="likeBtn"><i class="fas fa-heart"></i> J'aime</button>
+                <a href="#" id="rawLink" class="btn" target="_blank">Voir brut</a>
+                <button class="btn" id="shareBtn"><i class="fas fa-share"></i> Partager</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale d'upload -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Uploader une commande</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label>Nom de la commande *</label>
+                    <input type="text" id="uploadName" required>
+                </div>
+                <div class="form-group">
+                    <label>Auteur *</label>
+                    <input type="text" id="uploadAuthor" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="uploadDesc" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Code *</label>
+                    <textarea id="uploadCode" rows="10" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Catégorie</label>
+                    <select id="uploadCategory">
+                        <option>GoatBot</option>
+                        <option>MiraiBot</option>
+                        <option>AutoBot</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tags (séparés par des virgules)</label>
+                    <input type="text" id="uploadTags" placeholder="ex: goatbot,utility">
+                </div>
+                <div class="form-group">
+                    <label>Difficulté</label>
+                    <select id="uploadDifficulty">
+                        <option>Débutant</option>
+                        <option>Intermédiaire</option>
+                        <option>Avancé</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Clé API *</label>
+                    <input type="password" id="uploadApiKey" required value="secret-key-change-me">
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Commands Sharing Platform | Développé avec Flask</p>
+    </footer>
+
+    <script>
+        // Variables globales
+        let currentCommandId = null;
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // Éléments DOM
+        const grid = document.getElementById('commandGrid');
+        const detailModal = document.getElementById('detailModal');
+        const uploadModal = document.getElementById('uploadModal');
+        const closeButtons = document.querySelectorAll('.close');
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCommands();
+            updateStats();
+        });
+
+        // Fonction pour charger les commandes
+        async function loadCommands() {
+            let url = `/api/items?page=1&limit=20`;
+            if (currentSearch) url += `&search=${encodeURIComponent(currentSearch)}`;
+            if (currentFilter && currentFilter !== 'all' && currentFilter !== 'trending' && currentFilter !== 'recent') {
+                url += `&category=${encodeURIComponent(currentFilter)}`;
+            } else if (currentFilter === 'trending') {
+                url += `&filter=trending`;
+            } else if (currentFilter === 'recent') {
+                url += `&filter=recent`;
+            }
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                displayCommands(data.items);
+            } catch (err) {
+                console.error('Erreur chargement:', err);
+            }
+        }
+
+        function displayCommands(items) {
+            grid.innerHTML = '';
+            items.forEach(cmd => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                // Étoiles vides pour l'instant (rating 0.0)
+                card.innerHTML = `
+                    <h3>${escapeHtml(cmd.itemName)}</h3>
+                    <div class="rating">⭐ ⭐ ⭐ ⭐ ⭐ (0.0)</div>
+                    <div class="description">${escapeHtml(cmd.description || 'Bot command from ' + cmd.category)}</div>
+                    <div class="tags">
+                        <span class="tag">${escapeHtml(cmd.category)}</span>
+                        <span class="tag">${escapeHtml(cmd.difficulty)}</span>
+                        ${cmd.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn" onclick="showDetails(${cmd.itemID})">View</button>
+                        <a href="/raw/${cmd.shortId}" class="btn" target="_blank">Go</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe.replace(/[&<>"]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return m;
+            });
+        }
+
+        // Afficher les détails
+        async function showDetails(id) {
+            try {
+                const res = await fetch(`/api/item/${id}`);
+                const cmd = await res.json();
+                currentCommandId = id;
+                document.getElementById('detailName').textContent = cmd.itemName;
+                document.getElementById('detailAuthor').textContent = cmd.authorName;
+                document.getElementById('detailDesc').textContent = cmd.description || 'Aucune description';
+                document.getElementById('detailCategory').textContent = cmd.category;
+                document.getElementById('detailDifficulty').textContent = cmd.difficulty;
+                document.getElementById('detailTags').textContent = cmd.tags.join(', ');
+                document.getElementById('detailViews').textContent = cmd.views;
+                document.getElementById('detailLikes').textContent = cmd.likes;
+                document.getElementById('detailShares').textContent = cmd.shares || 0;
+                document.getElementById('detailCode').textContent = cmd.code;
+                document.getElementById('rawLink').href = `/raw/${cmd.shortId}`;
+                // Rating toujours 0.0 pour l'instant
+                document.getElementById('detailRating').innerHTML = '⭐ ⭐ ⭐ ⭐ ⭐ (0.0)';
+                detailModal.style.display = 'block';
+            } catch (err) {
+                alert('Erreur chargement détails');
+            }
+        }
+
+        // Liker
+        document.getElementById('likeBtn').onclick = async () => {
+            if (!currentCommandId) return;
+            try {
+                const res = await fetch(`/api/items/${currentCommandId}/like`, { method: 'POST' });
+                const data = await res.json();
+                document.getElementById('detailLikes').textContent = data.likes;
+                updateStats(); // met à jour les stats globales
+                loadCommands(); // recharge la liste pour mettre à jour les cartes (optionnel)
+            } catch (err) {
+                alert('Erreur like');
+            }
+        };
+
+        // Partager
+        document.getElementById('shareBtn').onclick = async () => {
+            if (!currentCommandId) return;
+            try {
+                await fetch(`/api/items/${currentCommandId}/share`, { method: 'POST' });
+                document.getElementById('detailShares').textContent = 
+                    parseInt(document.getElementById('detailShares').textContent) + 1;
+                updateStats();
+            } catch (err) {
+                alert('Erreur partage');
+            }
+        };
+
+        // Mise à jour des statistiques
+        async function updateStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const stats = await res.json();
+                document.getElementById('miniCommands').textContent = stats.totalCommands;
+                document.getElementById('miniLikes').textContent = stats.totalLikes;
+                document.getElementById('miniUsers').textContent = stats.activeUsers;
+                document.getElementById('totalCommands').textContent = stats.totalCommands;
+                document.getElementById('totalLikes').textContent = stats.totalLikes;
+                document.getElementById('activeUsers').textContent = stats.activeUsers;
+                document.getElementById('totalShares').textContent = stats.totalShares;
+            } catch (err) {}
+        }
+
+        // Gestion des filtres
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                loadCommands();
+            });
+        });
+
+        // Recherche
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            currentSearch = document.getElementById('searchInput').value;
+            loadCommands();
+        });
+
+        // AI search (simulé)
+        document.getElementById('aiSearchBtn').addEventListener('click', () => {
+            alert('Recherche IA - fonctionnalité à venir');
+        });
+
+        // Recherche par ID
+        document.getElementById('goToIdBtn').addEventListener('click', async () => {
+            const id = document.getElementById('commandIdInput').value.trim();
+            if (!id) return;
+            try {
+                const res = await fetch(`/api/lookup/${id}`);
+                if (res.ok) {
+                    const cmd = await res.json();
+                    showDetails(cmd.itemID);
+                } else {
+                    alert('Commande non trouvée');
+                }
+            } catch (err) {
+                alert('Erreur');
+            }
+        });
+
+        // Upload
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            uploadModal.style.display = 'block';
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const apiKey = document.getElementById('uploadApiKey').value;
+            const data = {
+                itemName: document.getElementById('uploadName').value,
+                authorName: document.getElementById('uploadAuthor').value,
+                description: document.getElementById('uploadDesc').value,
+                code: document.getElementById('uploadCode').value,
+                category: document.getElementById('uploadCategory').value,
+                tags: document.getElementById('uploadTags').value.split(',').map(t => t.trim()),
+                difficulty: document.getElementById('uploadDifficulty').value
+            };
+            try {
+                const res = await fetch('/api/items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': apiKey
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (res.status === 201) {
+                    alert('Upload réussi !');
+                    uploadModal.style.display = 'none';
+                    loadCommands();
+                    updateStats();
+                } else {
+                    const err = await res.json();
+                    alert(`Erreur ${res.status}: ${err.error || 'Inconnue'}`);
+                }
+            } catch (err) {
+                alert('Erreur réseau');
+            }
+        });
+
+        // Fermeture des modales
+        closeButtons.forEach(btn => {
+            btn.onclick = function() {
+                detailModal.style.display = 'none';
+                uploadModal.style.display = 'none';
+            };
+        });
+
+        window.onclick = function(event) {
+            if (event.target == detailModal) detailModal.style.display = 'none';
+            if (event.target == uploadModal) uploadModal.style.display = 'none';
+        };
+    </script>
+</body>
+</html>
